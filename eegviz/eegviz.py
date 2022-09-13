@@ -78,7 +78,16 @@ class EvData(object):
         if period is None:
             return self.__mneraw.get_data(picks=channel, return_times=return_times, verbose=verbose)
         else:
-            return self.__mneraw.get_data(picks=channel, tmin=period[0], tmax=period[1], return_times=return_times, verbose=verbose)
+            tmin = max([period[0], self.__tmin])
+            tmax = min([period[1], self.__tmax])
+
+            min_ind = np.argmin(np.abs(self.times - tmin))
+            max_ind = np.argmin(np.abs(self.times - tmax))
+
+            if period[1] > self.__tmax:
+                max_ind = None
+
+            return self.__mneraw.get_data(picks=channel, start=min_ind, stop=max_ind, return_times=return_times, verbose=verbose)
 
     def get_data_by_event(self, event_name, pre=1, post=1, channel=None, return_times=False, verbose=False):
         '''Returns EEG data around given event.
@@ -115,7 +124,7 @@ class EvData(object):
             tmin = max([onset - pre, self.__tmin])
             tmax = min([onset + duration + post, self.__tmax])
 
-            d = self.__mneraw.get_data(picks=channel, tmin=tmin, tmax=tmax, return_times=return_times, verbose=verbose)
+            d = self.get_data(channel=channel, period=[tmin, tmax], return_times=return_times, verbose=verbose)
             datas.append(d)
 
         return datas
