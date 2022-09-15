@@ -52,6 +52,12 @@ class EvData(object):
     def events_dataframe(self):
         return self.__events_df
 
+    @property
+    def channel_unit(self):
+        chinfo = self.__mneraw.info['chs']
+        chunit = {c['ch_name']: c['unit'] for c in chinfo}
+        return chunit
+
     def get_data(self, period=None, channel=None, return_times=False, verbose=False):
         '''Returns EEG data.
 
