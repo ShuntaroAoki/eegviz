@@ -55,7 +55,7 @@ class EvData(object):
     @property
     def channel_unit(self):
         chinfo = self.__mneraw.info['chs']
-        chunit = {c['ch_name']: c['unit'] for c in chinfo}
+        chunit = {c['ch_name']: unit_fiff_to_human(c['unit']) for c in chinfo}
         return chunit
 
     def get_data(self, period=None, channel=None, return_times=False, verbose=False):
@@ -166,3 +166,44 @@ def parse_annotation(annot):
     for a in annot:
         events_df = pd.concat([events_df, pd.DataFrame(a, index=[0])], ignore_index=True)
     return events_df
+
+
+def unit_fiff_to_human(unit):
+    '''Convert FIFF unit code to human readable form.'''
+
+    table = {
+        -1: "<No unit>",
+        0: "unitless",
+        1: "meter",
+        2: "kilogram",
+        3: "second",
+        4: "ampere",
+        5: "Kelvin",
+        6: "mole",
+        7: "radian",
+        8: "steradian",
+        9: "candela",
+        10: "mol/m^3",
+        101: "herz",
+        102: "Newton",
+        103: "pascal",
+        104: "joule",
+        105: "watt",
+        106: "coulomb",
+        107: "volt",
+        108: "farad",
+        109: "ohm",
+        110: "one per ohm",
+        111: "weber",
+        112: "tesla",
+        113: "Henry",
+        114: "celcius",
+        115: "lumen",
+        116: "lux",
+        117: "V/m^2",
+        201: "T/m",
+        202: "Am",
+        203: "Am/m^2",
+        204: "Am/m^3",
+    }
+    return table[int(unit)]
