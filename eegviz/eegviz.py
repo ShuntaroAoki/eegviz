@@ -64,6 +64,10 @@ class EvData(object):
         chumul = {c['ch_name']: int(c['unit_mul']) for c in chinfo}
         return chumul
 
+    @property
+    def _mne_raw(self):
+        return self.__mneraw
+
     def get_data(self, period=None, channel=None, return_times=False, verbose=False):
         '''Returns EEG data.
 
