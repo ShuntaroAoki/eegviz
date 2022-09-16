@@ -58,6 +58,12 @@ class EvData(object):
         chunit = {c['ch_name']: unit_fiff_to_human(c['unit']) for c in chinfo}
         return chunit
 
+    @property
+    def channel_unit_multiplier(self):
+        chinfo = self.__mneraw.info['chs']
+        chumul = {c['ch_name']: int(c['unit_mul']) for c in chinfo}
+        return chumul
+
     def get_data(self, period=None, channel=None, return_times=False, verbose=False):
         '''Returns EEG data.
 
