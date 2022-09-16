@@ -30,7 +30,7 @@ class EvData(object):
             self.__tmin  = min(self.__times)
             self.__sf    = self.__mneraw.info['sfreq']
 
-            self.__events_df = parse_annotation(list(self.__mneraw.annotations))
+            self.__events_df = _parse_annotation(list(self.__mneraw.annotations))
 
     @property
     def channels(self):
@@ -55,7 +55,7 @@ class EvData(object):
     @property
     def channel_unit(self):
         chinfo = self.__mneraw.info['chs']
-        chunit = {c['ch_name']: unit_fiff_to_human(c['unit']) for c in chinfo}
+        chunit = {c['ch_name']: _unit_fiff_to_human(c['unit']) for c in chinfo}
         return chunit
 
     @property
@@ -170,7 +170,7 @@ class EvData(object):
             raise ValueError('Unknown file type: {}'.format(ext))
 
 
-def parse_annotation(annot):
+def _parse_annotation(annot):
     '''Parses MNE annotations and returns them as a Pandas dataframe.'''
     events_df = pd.DataFrame(columns=['onset', 'duration', 'description', 'orig_time'])
     for a in annot:
@@ -178,7 +178,7 @@ def parse_annotation(annot):
     return events_df
 
 
-def unit_fiff_to_human(unit):
+def _unit_fiff_to_human(unit):
     '''Convert FIFF unit code to human readable form.'''
 
     table = {
